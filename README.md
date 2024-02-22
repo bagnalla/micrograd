@@ -1,0 +1,2 @@
+# micrograd
+micrograd in OCaml
