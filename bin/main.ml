@@ -5,7 +5,7 @@
 
 open Core
 
-(** Labelled expressions. *)
+(** Differentiable expressions. *)
 type exp =
   | Num of float
   | Var of string
@@ -15,15 +15,15 @@ type exp =
   | Pow of exp * float
                    [@@deriving sexp, compare]
 
-let rec sexp_of_exp (v : exp) : Sexp.t =
-  match v with
-  | Num n -> Sexp.Atom (string_of_float n)
-  | Var x -> Sexp.Atom x
-  | Add (l, r) -> Sexp.List [sexp_of_exp l; Sexp.Atom "+"; sexp_of_exp r]
-  | Mul (l, r) -> Sexp.List [sexp_of_exp l; Sexp.Atom "*"; sexp_of_exp r]
-  | Exp e -> Sexp.List [Sexp.Atom "exp"; sexp_of_exp e]
-  | Pow (e, k) -> Sexp.List [Sexp.Atom "pow"; sexp_of_exp e;
-                             Sexp.Atom (string_of_float k)]
+(* let rec sexp_of_exp (v : exp) : Sexp.t = *)
+(*   match v with *)
+(*   | Num n -> Sexp.Atom (string_of_float n) *)
+(*   | Var x -> Sexp.Atom x *)
+(*   | Add (l, r) -> Sexp.List [sexp_of_exp l; Sexp.Atom "+"; sexp_of_exp r] *)
+(*   | Mul (l, r) -> Sexp.List [sexp_of_exp l; Sexp.Atom "*"; sexp_of_exp r] *)
+(*   | Exp e -> Sexp.List [Sexp.Atom "exp"; sexp_of_exp e] *)
+(*   | Pow (e, k) -> Sexp.List [Sexp.Atom "pow"; sexp_of_exp e; *)
+(*                              Sexp.Atom (string_of_float k)] *)
 
 module S = Set.Make(String)
 
@@ -55,8 +55,8 @@ let tanh e = div
 let sum (es : exp list) : exp =
   List.fold es ~init:(Num 0.0) ~f:add
 
-let string_of_exp (v : exp) : string =
-  Sexp.to_string @@ sexp_of_exp v
+(* let string_of_exp (v : exp) : string = *)
+(*   Sexp.to_string @@ sexp_of_exp v *)
 
 (** We use variable environments to assign values to variables. *)
 module Env = Map.Make(String)
@@ -158,7 +158,7 @@ let () =
 
   (* Run [num_steps] iterations of gradient descent. *)
   let num_steps = 1000 in
-  for i = 0 to num_steps do
+  for _ = 0 to num_steps do
 
     (* Mean squared error loss expression. *)
     let loss = sum @@ List.map (List.zip_exn ys ypreds) ~f:(fun (ygt, yout) ->
