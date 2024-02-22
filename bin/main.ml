@@ -156,13 +156,13 @@ let () =
   let env = ref (List.fold ws ~init:Env.empty ~f:(fun acc w ->
                      Map.set acc ~key:w ~data:(Random.float_range (-1.0) 1.0))) in
 
+  (* Mean squared error loss expression. *)
+  let loss = sum @@ List.map (List.zip_exn ys ypreds) ~f:(fun (ygt, yout) ->
+                        pow (sub yout (num ygt)) 2.0) in
+  
   (* Run [num_steps] iterations of gradient descent. *)
   let num_steps = 1000 in
   for _ = 0 to num_steps do
-
-    (* Mean squared error loss expression. *)
-    let loss = sum @@ List.map (List.zip_exn ys ypreds) ~f:(fun (ygt, yout) ->
-                          pow (sub yout (num ygt)) 2.0) in
 
     (* Compute gradient of loss wrt. the weights. *)
     let grad = backprop !env loss in
